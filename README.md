@@ -9,8 +9,8 @@ Existe un problema de conteo, pero mas que nada creo que tiene que ver con YOLO,
 No se si en videos menos densos no se comporta mejor. <br>
 **Se agrego una carpeta con los resultados de los videos procesados llamada "resultados"**
 Puntos a Mejorar :  
-                  [ ]Trabajar en una resolucion mas pequeña.
-                  [ ]Que las lineas se ajusten a la resolucion.
-                  [ ]Probar con modelos mas grandes de YOLO. y/o Probar com modelos personalizados
+                  [ ]Trabajar en una resolucion mas pequeña.<br>
+                  [ ]Que las lineas se ajusten a la resolucion.<br>
+                  [ ]Probar con modelos mas grandes de YOLO. y/o Probar com modelos personalizados <br>
                   
             
