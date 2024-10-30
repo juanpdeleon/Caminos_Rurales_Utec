@@ -1,0 +1,3 @@
+Auto: 9
+Omnibus: 1
+Camion: 1
