@@ -10,7 +10,7 @@ No se si en videos menos densos no se comporta mejor. <br>
 **Se agrego una carpeta con los resultados de los videos procesados llamada "resultados"**
 Puntos a Mejorar :  
                   [ ]Trabajar en una resolucion mas pequeña.<br>
-                  [ ]Que las lineas se ajusten a la resolucion.<br>
+                  [ ]Que las lineas y los calculos se ajusten a la resolucion del video.<br>
                   [ ]Probar con modelos mas grandes de YOLO. y/o Probar com modelos personalizados <br>
                   
             
