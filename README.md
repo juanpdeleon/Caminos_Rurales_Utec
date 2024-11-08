@@ -1,7 +1,7 @@
 # **Trabajo UTEC**<br>
 ## **Camineria Rural , Tracking de vehiculos on IA** <br>
 ### ** El trabajo esta echo en Conda y Jupiter **
-El archivo principal **"camineria.ipynb"** de trabajo esta escrito en Jupiter con la finalidad de hacer pruebas.-<br>
+El archivo principal **"camineria_MAS_FECHA.ipynb"** de trabajo esta escrito en Jupiter con la finalidad de hacer pruebas.-<br>
 Todos los videos se convierten a un formato mas pequeño para que no sea tan pesado (**1024x768**).-<br>
 Se cuentan los vehiculos unicamente cuando estan entre las lineas azules.<br>
 Es un modelo de TEST, necesitaria ver como son los videos originales.<br>
