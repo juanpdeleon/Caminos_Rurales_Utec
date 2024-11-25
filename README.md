@@ -11,8 +11,8 @@ los parametros de entrada estan en el archivo **config.json** con el siguiente f
 	"Log_dir":"./log_dir"
 }
 
-Para cada detecccion se crean 2 archios:
-1 ".jpg" con el crop de la deteccion con el formato : video_toten1_14-11-2024_01_11.mp4_track_1_frame_4.jpg de donde : video_toten1_14-11-2024_01_11.mp4 seria el nombre original del video yy despues informacion del track
+Para cada detecccion se crean 2 archios:<br>
+1 ".jpg" con el crop de la deteccion con el formato : video_toten1_14-11-2024_01_11.mp4_track_1_frame_4.jpg de donde : video_toten1_14-11-2024_01_11.mp4 seria el nombre original del video yy despues informacion del track<br>
 1 json con la informacion de la deteccion en el formato :
 
 {
