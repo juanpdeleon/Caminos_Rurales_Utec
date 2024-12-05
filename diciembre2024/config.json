@@ -1,0 +1,6 @@
+{
+    "Input_files": "entrada/",
+    "Output_files": "./salidas",
+    "Backup_files": "./backup",
+	"Log_dir":"./log_dir"
+}
