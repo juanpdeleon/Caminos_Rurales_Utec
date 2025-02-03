@@ -4,6 +4,7 @@ from ultralytics import solutions
 import os
 import shutil
 import json
+import re
 
 # Diccionario de clases
 CLASES = {
@@ -94,8 +95,10 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
                     objects_crossed.add(track_id)
 
                     tipo_vehiculo = CLASES.get(track_id % len(CLASES), "unknown")
-                    tiempo = str(int(frame_count / fps))
+                   # tiempo = str(int(frame_count / fps))
+                    
                     nombre_captura = save_cropped_box(im0, box, track_id, frame_count, 100, cropped_box, archive)
+                    tiempo = formatear_nombre_archivo(nombre_captura)
                     list_data = [direccion, nombre_captura + ".jpg", tipo_vehiculo, 0, 'XXX0000', tiempo]
 
                     save_json_file(list_data, saved_json, nombre_captura)
@@ -136,6 +139,19 @@ def save_cropped_box(im0, box, track_id, frame_count, incremento_porcentaje, out
     return f"{archive}_track_{track_id}_frame_{frame_count}"
 
 
+def formatear_nombre_archivo(nombre_archivo: str) -> str:
+    # Buscar la fecha y hora en el nombre del archivo
+    match = re.search(r'(\d{2}-\d{2}-\d{2})_(\d{2})-(\d{2})-(\d{2})-(\d{2})', nombre_archivo)
+    
+    if match:
+        fecha = match.group(1)
+        # Se formatea la hora como hh:mm:ss.dd
+        hora = f"{match.group(2)}:{match.group(3)}:{match.group(4)}.{match.group(5)}"
+        return f"{fecha} {hora}"
+    else:
+        return "Formato inválido"
+        
+        
 def save_json_file(list_data, saved_json, file_name):
     file_name_path = saved_json + "/" + file_name
     datos_json = {
@@ -151,3 +167,4 @@ def save_json_file(list_data, saved_json, file_name):
 
     print("Archivo JSON creado exitosamente.")
     return True
+
