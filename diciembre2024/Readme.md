@@ -6,5 +6,5 @@
 <li>Las ubicaciones de las salidas de los frames y los json con las detecciones<br /><br /><br /></li>
 </ol>
 <p>Archivio libreria.py, ahi estan todas las funciones del sistema</p>
-<p>archivo Amineria_04-12_ipynb es el lanzador.</p>
+<p>archivo Camineria_04-12_ipynb es el lanzador. porque utilizo Jupiter. para hacer las pruebas.</p>
 <p>&nbsp;</p>
