@@ -5,10 +5,16 @@ import os
 import shutil
 import json
 
+# Diccionario de clases
+CLASES = {
+    1: "Moto",
+    2: "Auto",
+    3: "Omnibus",
+    4: "C-Liviano",
+    5: "C-Pesado"
+}
 
-# Función principal del sistema que carga los datos
-# ======================================================================================================================================
-def preocess_input_video(input_dir, output_dir, backup_dir, Log_dir):  # Lee los directorios de entrada de videos y salida de los frames del algoritmo
+def preocess_input_video(input_dir, output_dir, backup_dir, Log_dir):
     cropped_box = output_dir + "/cropped"
     saved_json = output_dir + "/jsonfile"
 
@@ -22,17 +28,16 @@ def preocess_input_video(input_dir, output_dir, backup_dir, Log_dir):  # Lee los
             os.makedirs(backup_dir)
             os.makedirs(Log_dir)
 
-        content = [files for files in os.listdir(input_dir) if files.endswith('.mp4')]  # carga la lista de videos en MP4
+        content = [files for files in os.listdir(input_dir) if files.endswith('.mp4')]
 
-        if len(content) > 0:  # Si existe más de un archivo en la entrada
+        if len(content) > 0:
             for archive in content:
                 print(archive)
                 path_video_file = input_dir + archive
 
-                # Procesa el archivo de video
                 status = count_specific_classes(
-                    path_video_file, "output_specific_classes.avi", "yolo11n.pt",
-                    [1, 2, 3, 5, 7], cropped_box, saved_json, archive
+                    path_video_file, "output_specific_classes.avi", "caminosRurales.pt",
+                    [1, 2, 3,4,5], cropped_box, saved_json, archive
                 )
                 if status:
                     shutil.copy(path_video_file, backup_dir + "/" + archive)
@@ -43,30 +48,18 @@ def preocess_input_video(input_dir, output_dir, backup_dir, Log_dir):  # Lee los
             print("Directorio de videos está vacío....")
 
 
-# ======================================================================================================================================
-
-# Diccionario de clases
-CLASES = {
-    1: "bicycle",
-    2: "car",
-    3: "motorcycle",
-    5: "bus",
-    7: "truck"
-}
-
-
 def count_specific_classes(video_path, output_video_path, model_path, classes_to_count, cropped_box, saved_json, archive):
-    """Cuenta clases específicas de objetos en un video."""
     cap = cv2.VideoCapture(video_path)
     assert cap.isOpened(), "Error al abrir el archivo de video"
     w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
     video_writer = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
 
-    line_points_max = [(10, 350), (1300, 350)]  # Línea principal de detección
-    counter = solutions.ObjectCounter(show=True, region=line_points_max, model=model_path, classes=classes_to_count, verbose=False)
+    line_points_max = [(10, 250), (1300, 250)]  # Línea principal de detección ajustada
+    counter = solutions.ObjectCounter(show=True, region=line_points_max, model=model_path, classes=classes_to_count, verbose=False, line_thickness=1)
 
     frame_count = 0
     objects_crossed = set()
+    previous_positions = {}
 
     while cap.isOpened():
         success, im0 = cap.read()
@@ -75,28 +68,39 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
             break
 
         im0 = counter.count(im0)
+       
         video_writer.write(im0)
-        cv2.line(im0, (10, 350), (1300, 350), (255, 100, 255), 1)
+        cv2.line(im0, (10, 250), (1300, 250), (255, 100, 255), 1)  # Línea ajustada
 
         frame_count += 1
         for track_id, box in zip(counter.track_ids, counter.boxes):
             x1, y1, x2, y2 = box
             centroid = ((x1 + x2) // 2, (y1 + y2) // 2)
 
-            if 350 < centroid[1] < 400:  # Detecta cruce en la región
+            if 250 < centroid[1] < 300:  # Rango ajustado
+                if track_id in previous_positions:
+                    previous_y = previous_positions[track_id][1]
+                    current_y = centroid[1]
+
+                    if current_y < previous_y:
+                        direccion = "IN"
+                    else:
+                        direccion = "OUT"
+                else:
+                    direccion = "UNKNOWN"
+
                 if track_id not in objects_crossed:
-                    print(f"Objeto {track_id} cruzó la línea. Bounding Box: {box}")
+                    print(f"Objeto {track_id} cruzó la línea en dirección: {direccion}")
                     objects_crossed.add(track_id)
 
-                    # Determina la dirección del vehículo , por ahora weesta la linea horizontal hay que ver con la vertical
-                    direccion = "I" if centroid[1] < 375 else "D"  # direccion = "IN" if centroid[1] < 375 else "OUT" se cambia IN por I y out por D
                     tipo_vehiculo = CLASES.get(track_id % len(CLASES), "unknown")
-
                     tiempo = str(int(frame_count / fps))
                     nombre_captura = save_cropped_box(im0, box, track_id, frame_count, 100, cropped_box, archive)
                     list_data = [direccion, nombre_captura + ".jpg", tipo_vehiculo, 0, 'XXX0000', tiempo]
 
                     save_json_file(list_data, saved_json, nombre_captura)
+
+            previous_positions[track_id] = centroid
 
         if cv2.waitKey(30) & 0xFF == ord('q'):
             print("Reproducción detenida por el usuario.")
