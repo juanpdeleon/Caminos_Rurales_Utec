@@ -1,8 +1,9 @@
 <!-- ####### HEY, I AM THE SOURCE EDITOR! #########-->
-<h2 style="color: #2e6c80;">&nbsp;Version definitiva del sistema. Marzo 2025 - Pria UTEC</h2>
+<h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 - Pria UTEC</strong></span></h2>
 <p>Se incluyen todas las actualizaciones del codigo al momento de la entrega del informe final.</p>
 <ul>
-<li>Objetivo principal
+<li>
+<h3><strong>Objetivo principal</strong></h3>
 <ul>
 <li>Analiza todos los videos y para cada deteccion de vehiculo, genera un archivo JSON con la informacion relevante para el DASHBOARD.</li>
 <li>Formato estipulado de JSON
@@ -33,9 +34,10 @@
 </li>
 </ul>
 </li>
-<li>Estructura del algoritmo
+<li>
+<h3><strong>Estructura del algoritmo</strong></h3>
 <ul>
-<li>Archivo de configuraciones "config.json"
+<li>Archivo de configuraciones "<span style="text-decoration: underline;"><strong>config.json</strong></span>"
 <ul>
 <li>&nbsp;Formato : <br />
 <ul>
@@ -44,8 +46,8 @@
 </li>
 </ul>
 </li>
-<li>Archivo de funciones : "libreria.py" es el que tiene toda la logica del YOLO y las detecciones.</li>
-<li>Archivo de Inicio : "inicio.py" es el&nbsp; responsable de leer el archivo de configuracion del sistema e informar a las funciones de que manera se va a procesar.</li>
+<li>Archivo de funciones : "<strong><span style="text-decoration: underline;">libreria.py</span></strong>" es el que tiene toda la logica del YOLO y las detecciones.</li>
+<li>Archivo de Inicio : "<span style="text-decoration: underline;"><strong>inicio.py</strong></span>" El el archivo que se ejecuta desde python, el&nbsp; es responsable de leer el archivo de configuracion del sistema e informar a las funciones de que manera se va a procesar.</li>
 </ul>
 </li>
 </ul>
