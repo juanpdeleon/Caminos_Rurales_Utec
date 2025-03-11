@@ -1,3 +1,20 @@
+/*
+ * Proyecto: [Camineria Rural]
+ * Archivo: [inicio.py]
+ * Descripción: [Proyecto de camineria rural para la deteccion de vehiculos de distintos portes]
+ *
+ * Autores:
+ * - [Bruna de Vargas] ([bruna.devargas@utec.edu.uy])
+ * - [Pablo Cuña] ([pablo.cuna@utec.edu.uy])
+ * - [Juan Pedro de León] ([juan.deleon@utec.edu.uy])
+ * - [Victor Castelli] ([victor.castelli@utec.edu.uy])
+ * 
+ * Institución: [UTEC - ITRN]
+ * Departamento: [Robotia e Intelifencia Artificial]
+ * Fecha: [13-03-2025]
+ *
+ */
+
 import cv2
 import copy
 from ultralytics import solutions
