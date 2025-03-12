@@ -1,20 +1,20 @@
-/*
- * Proyecto: [Camineria Rural]
- * Archivo: [libreria.py]
- * Descripción: [Proyecto de camineria rural para la deteccion de vehiculos de distintos portes]
- *
- * Autores:
- * - [Bruna de Vargas] ([bruna.devargas@utec.edu.uy])
- * - [Pablo Cuña] ([pablo.cuna@utec.edu.uy])
- * - [Juan Pedro de León] ([juan.deleon@utec.edu.uy])
- * - [Victor Castelli] ([victor.castelli@utec.edu.uy])
- * 
- * Institución: [UTEC - ITRN]
- * Departamento: [Robotia e Intelifencia Artificial]
- * Fecha: [13-03-2025]
- *
- */
-
+#***************************************************
+#
+# Proyecto: [Camineria Rural]
+# Archivo: [libreria.py]
+# Descripción: [Proyecto de camineria rural para la deteccion de vehiculos de distintos portes]
+#
+# Autores:
+# - [Bruna de Vargas] ([bruna.devargas@utec.edu.uy])
+# - [Pablo Cuña] ([pablo.cuna@utec.edu.uy])
+# - [Juan Pedro de León] ([juan.deleon@utec.edu.uy])
+# - [Victor Castelli] ([victor.castelli@utec.edu.uy])
+# 
+# Institución: [UTEC - ITRN]
+# Departamento: [PRIA - Postrado en Robotia e Intelifencia Artificial]
+# Fecha: [13-03-2025]
+#
+# **************************************************
 
 import cv2
 import os
@@ -22,6 +22,8 @@ import shutil
 import json
 import re
 from ultralytics import solutions
+import time  # Importar para esperar 30 segundos
+import csv  # Aquí agregamos la importación del módulo csv
 
 # Diccionario de clases
 CLASES = {
@@ -49,29 +51,36 @@ def process_input_video(input_dir, output_dir, backup_dir, Log_dir):
     os.makedirs(backup_dir, exist_ok=True)
     os.makedirs(Log_dir, exist_ok=True)
 
-    # Obtener archivos de video
-    content = [f for f in os.listdir(input_dir) if f.endswith('.mp4')]
+    while True:
+        # Obtener archivos de video
+        content = [f for f in os.listdir(input_dir) if f.endswith('.mp4')]
 
-    if not content:
-        print("Directorio de videos está vacío.")
-        return
-
-    for archive in content:
-        print(f"Procesando: {archive}")
-        path_video_file = os.path.join(input_dir, archive)
-
-        status = count_specific_classes(
-            path_video_file, "output_specific_classes.avi", "best.pt",
-            [0,1,2,3,4], cropped_box, saved_json,saved_csv, archive
-        )
-
-        if status:
-            shutil.copy(path_video_file, os.path.join(backup_dir, archive))
-            print(f"Video copiado: {path_video_file} -> {backup_dir}/{archive}")
+        if not content:
+            print("Directorio de videos está vacío.")
         else:
-            print("Error procesando el archivo de video.")
-            
-            
+            for archive in content:
+                print(f"Procesando: {archive}")
+                path_video_file = os.path.join(input_dir, archive)
+
+                status = count_specific_classes(
+                    path_video_file, "output_specific_classes.avi", "best.pt",
+                    [0,1,2,3,4], cropped_box, saved_json, saved_csv, archive
+                )
+
+                if status:
+                    # Copiar el archivo a backup_dir
+                    shutil.copy(path_video_file, os.path.join(backup_dir, archive))
+                    print(f"Video copiado: {path_video_file} -> {backup_dir}/{archive}")
+                    # Eliminar el archivo procesado de input_dir
+                    os.remove(path_video_file)
+                    print(f"Video eliminado de {input_dir}: {path_video_file}")
+                else:
+                    print("Error procesando el archivo de video.")
+        
+        # Esperar 30 segundos antes de volver a revisar el directorio
+        print("Esperando 30 segundos para nuevos archivos...")
+        time.sleep(30)
+
 def count_specific_classes(video_path, output_video_path, model_path, classes_to_count, cropped_box, saved_json, saved_csv, archive):
     """Cuenta clases específicas de objetos en un video y guarda los resultados en JSON y CSV."""
     clasificadas = "./salidas/clasificadas"
@@ -165,8 +174,7 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
                                 archive_class="5_ND_"+archive
                                 nombre_captura_limpia = save_cropped_box(imagen_nueva, box, track_id, frame_count, 0, clasificadas,archive_class) # captura de pantalla limpia sin bo box
                                 
-                                
-#nombre_captura = save_cropped_box(im0, box, track_id, frame_count, 100, cropped_box, archive)
+                            #nombre_captura = save_cropped_box(im0, box, track_id, frame_count, 100, cropped_box, archive)
                             tiempo = formatear_nombre_archivo(nombre_captura)
                             list_data = [direccion, nombre_captura + ".jpg", tipo_vehiculo, 0, 'XXX0000', tiempo, class_id]
                             
@@ -184,7 +192,6 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
     cv2.destroyAllWindows()
 
     return True
-
 
 def save_cropped_box(im0, box, track_id, frame_count, incremento_porcentaje, output_dir, archive):
     """Guarda una imagen recortada del bounding box."""
@@ -212,8 +219,6 @@ def save_cropped_box(im0, box, track_id, frame_count, incremento_porcentaje, out
         cv2.imwrite(output_path, im0)
     return f"{archive}_track_{track_id}_frame_{frame_count}"
 
-
-
 def formatear_nombre_archivo(nombre_archivo: str) -> str:
     """Formatea el nombre del archivo para extraer fecha y hora."""
     match = re.search(r'(\d{2}-\d{2}-\d{2})_(\d{2})-(\d{2})-(\d{2})-(\d{2})', nombre_archivo)
@@ -224,14 +229,8 @@ def formatear_nombre_archivo(nombre_archivo: str) -> str:
     else:
         return "Formato inválido"
 
-
-import csv
-import json
-import os
-
-def save_json_file_and_csv(list_data, saved_json, saved_csv, file_name, video_path,box, precision,archive_class):
+def save_json_file_and_csv(list_data, saved_json, saved_csv, file_name, video_path, box, precision, archive_class):
     """Guarda los datos en un archivo JSON y también en un archivo CSV."""
-    
     # Primero, guardar los datos en el archivo JSON como ya se hace
     json_file_path = os.path.join(saved_json, f"{file_name}.json")
     datos_json = {
@@ -264,7 +263,7 @@ def save_json_file_and_csv(list_data, saved_json, saved_csv, file_name, video_pa
         # Extraer la información de la lista de datos
         video_file = os.path.basename(video_path)
         image_file = archive_class  # Ruta de la imagen
-        class_name = list_data[2]  # Nom"5_ND_"+archivebre de la clase detectada
+        class_name = list_data[2]  # Nombre de la clase detectada
         class_id = list_data[6]    # ID de la clase
         direction = list_data[0]   # Dirección (IN/OUT/UNKNOWN)
         bbox_coords = ', '.join(map(str, box))  # Coordenadas del bounding box
