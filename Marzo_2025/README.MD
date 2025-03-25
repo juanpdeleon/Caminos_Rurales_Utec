@@ -1,5 +1,5 @@
 <!-- ####### HEY, I AM THE SOURCE EDITOR! #########-->
-<h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 - Pria UTEC</strong></span></h2>
+<h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 -- 20-03-2025 - Pria UTEC</strong></span></h2>
 <p>Se incluyen todas las actualizaciones del codigo al momento de la entrega del informe final.</p>
 <ul>
 <li>
