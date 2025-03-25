@@ -15,15 +15,23 @@
 # Fecha: [13-03-2025]
 #
 # **************************************************
-
 import cv2
 import os
 import shutil
 import json
 import re
 from ultralytics import solutions
+from ultralytics import YOLO
 import time  # Importar para esperar 30 segundos
 import csv  # Aquí agregamos la importación del módulo csv
+import torch
+
+#Modelo de ejes
+#axis_model = YOLO("vehiculos.pt")
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = YOLO("vehiculos.pt").to(device)  # Enviar modelo a GPU
+axis_model = YOLO("axis.pt").to(device)
 
 # Diccionario de clases
 CLASES = {
@@ -63,7 +71,7 @@ def process_input_video(input_dir, output_dir, backup_dir, Log_dir):
                 path_video_file = os.path.join(input_dir, archive)
 
                 status = count_specific_classes(
-                    path_video_file, "output_specific_classes.avi", "best.pt",
+                    path_video_file, "output_specific_classes.avi", "vehiculos.pt",
                     [0,1,2,3,4], cropped_box, saved_json, saved_csv, archive
                 )
 
@@ -155,11 +163,12 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
                         box_size = (((x1-x2)*(y1-y2)))  # Tamaño del bounding box
                         if box_size < video_size:  # Si el box es menor al 80% del video, guardar imagen
                             nombre_captura = save_cropped_box(im0, box, track_id, frame_count, 100, cropped_box, archive)
+                            #archive_class=archive
                             if class_id==0:                           
-                                archive_class='0_Auto_'+archive
+                                archive_class='0_Auto_'+archive                                
                                 nombre_captura_limpia = save_cropped_box(imagen_nueva, box, track_id, frame_count, 0, clasificadas,archive_class) # captura de pantalla limpia sin bo box
                             if class_id==1:                    
-                                archive_class="1_CamionL_"+archive
+                                archive_class="1_CamionL_"+archive                               
                                 nombre_captura_limpia = save_cropped_box(imagen_nueva, box, track_id, frame_count, 0, clasificadas,archive_class) # captura de pantalla limpia sin bo box
                             if class_id==2:
                                 archive_class="2_CamionP_"+archive
@@ -176,9 +185,18 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
                                 
                             #nombre_captura = save_cropped_box(im0, box, track_id, frame_count, 100, cropped_box, archive)
                             tiempo = formatear_nombre_archivo(nombre_captura)
-                            list_data = [direccion, nombre_captura + ".jpg", tipo_vehiculo, 0, 'XXX0000', tiempo, class_id]
-                            
-                            # Llamar a la nueva función que guarda tanto el JSON como el CSV
+                                                       
+                            # Llamar a la nueva función que guarda tanto el JSON como el CSV                          
+                            #
+                            # llamar a la funciona que devuelve la cantidad de neumaticos
+                          
+                            if class_id==1 or class_id==2 or class_id==3:
+                                print(" --------------------------------------------************",nombre_captura_limpia)
+                                axis = search_axis(clasificadas,nombre_captura_limpia,axis_model)                                
+                            else:
+                                axis=2
+
+                            list_data = [direccion, nombre_captura + ".jpg", tipo_vehiculo,axis, 'XXX0000', tiempo, class_id]
                             save_json_file_and_csv(list_data, saved_json, saved_csv, nombre_captura,video_path, box, confidence,archive_class)
 
                 previous_positions[track_id] = centroid
@@ -275,3 +293,49 @@ def save_json_file_and_csv(list_data, saved_json, saved_csv, file_name, video_pa
     print(f"Datos guardados en el archivo CSV: {csv_file_path}")
 
     return True
+
+def search_axis(clasificadas, archive_class,axis_model):
+    
+    #output_path = os.path.join(output_dir, f"{archive}_track_{track_id}_frame_{frame_count}.jpg")
+    image_path = os.path.join(clasificadas, f"./{archive_class}.jpg")
+    image_path = os.path.normpath(image_path)
+    image_path = image_path.replace("\\", "/")
+   
+    print("*********************************************************************************************************************")
+    print("Procesando imagen:", image_path)
+    print(archive_class)
+    print("****************************")
+
+    # Verificar si la imagen existe antes de intentar leerla
+    if not os.path.exists(image_path):
+        print("Error: La imagen no existe.")
+        return 0
+
+    image = cv2.imread(image_path)
+    if image is None:
+        print("Error: No se pudo cargar la imagen.")
+        return 0
+
+    # Convertir a RGB para YOLO
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    # Realizar la detección
+    results = axis_model.predict(image, conf=0.37)
+    #resultados = modelo.predict(imagen, conf=0.37, device=dispositivo)
+
+    # Verificar si hay detecciones
+    if not results or len(results) == 0:
+        print("No se detectaron objetos.")
+        return 2
+
+    # Obtener bounding boxes detectadas
+    detections = results[0].boxes if results[0].boxes is not None else []
+
+    # Contar el número de objetos detectados
+    num_objects = max(len(detections), 2)
+    if num_objects<2:
+        num_objects=2
+        
+    return num_objects
+
+    
