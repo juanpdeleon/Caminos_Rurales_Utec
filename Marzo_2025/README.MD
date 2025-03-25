@@ -48,6 +48,8 @@
 </li>
 <li>Archivo de funciones : "<strong><span style="text-decoration: underline;">libreria.py</span></strong>" es el que tiene toda la logica del YOLO y las detecciones.</li>
 <li>Archivo de Inicio : "<span style="text-decoration: underline;"><strong>inicio.py</strong></span>" El el archivo que se ejecuta desde python, el&nbsp; es responsable de leer el archivo de configuracion del sistema e informar a las funciones de que manera se va a procesar.</li>
+<li>Archivo de Inicio : "<span style="text-decoration: underline;"><strong>vehiculos.pt</strong></span>"El el archivo de pesos en YOLO11 que tienen la clasificacion de los vehiculos</li>
+<li>Archivo de Inicio : "<span style="text-decoration: underline;"><strong>axis.pt</strong></span>"El el archivo de pesos en YOLO12 que tienen la clasificacion de los ejes de los vehiculos</li>
 </ul>
 </li>
 </ul>
