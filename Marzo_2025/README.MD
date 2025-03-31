@@ -1,7 +1,6 @@
 <!-- Pria UTEC-->
-<h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 -- 20-03-2025 - Pria UTEC</strong></span></h2>
+<h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 -- 31-03-2025 - Pria UTEC</strong></span></h2>
 <p>Se incluyen todas las actualizaciones del codigo al momento de la entrega del informe final.</p>
-<blockquote>
 <ul>
 <li>
 <h3><strong>Objetivo principal</strong></h3>
@@ -61,7 +60,6 @@
 </ul>
 </li>
 </ul>
-</blockquote>
 <ul>
 <li style="list-style-type: none;">
 <ul>
