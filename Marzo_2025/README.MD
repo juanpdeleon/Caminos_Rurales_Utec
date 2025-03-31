@@ -1,4 +1,4 @@
-<!-- ####### HEY, I AM THE SOURCE EDITOR! #########-->
+<!-- Pria UTEC-->
 <h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 -- 20-03-2025 - Pria UTEC</strong></span></h2>
 <p>Se incluyen todas las actualizaciones del codigo al momento de la entrega del informe final.</p>
 <blockquote>
@@ -54,15 +54,11 @@
 </ul>
 </li>
 <li><strong>Inicio del Script como servicio: </strong>Para que el script siempre se este ejecutando a cada inicio del servidor.</li>
-<li>&nbsp;</li>
 <li><strong>Creacion de :</strong>
 <ul>
 <li>sudo nano /etc/systemd/system/camineria.service</li>
 <li>[Unit]<br />Description=Clasificacion de Imagens Camineria Rural<br />After=network.target[Service]<br /><span style="color: #ff0000;">ExecStart=/usr/bin/python3 /home/camaraftp/inicio.py</span><br />WorkingDirectory=/home/camaraftp<br />StandardOutput=append:/var/log/camineria_py.log<br />StandardError=append:/var/log/camineria__error.log<br />Restart=always<br />User=root<br />Group=root[Install]<br />WantedBy=multi-user.target</li>
 </ul>
-</li>
-<li>
-<h3>&nbsp;</h3>
 </li>
 </ul>
 </blockquote>
@@ -97,5 +93,4 @@
 </li>
 </ul>
 </li>
-<li>&nbsp;</li>
 </ul>
