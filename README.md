@@ -1,6 +1,6 @@
 <!-- PRIA - UTEC -->
 <h2><span style="color: #000080;"><strong>&nbsp;Version definitiva del sistema. Marzo 2025 - Pria UTEC</strong></span></h2>
-<p><b></b>Se incluyen todas las actualizaciones del codigo al momento de la entrega del informe final.- Ultima actualización : 31-03-2025  Carpeta "Marzo 2025"</b></p>
+<p><b>Se incluyen todas las actualizaciones del codigo al momento de la entrega del informe final.- Ultima actualización : 31-03-2025  Carpeta "Marzo 2025"</b></p>
 <ul>
 <li>
 <h3><strong>Objetivo principal</strong></h3>
