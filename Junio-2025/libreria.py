@@ -25,6 +25,8 @@ from ultralytics import YOLO
 import time  # Importar para esperar 30 segundos
 import csv  # Aquí agregamos la importación del módulo csv
 import torch
+import traceback
+
 
 #Modelo de ejes
 #axis_model = YOLO("vehiculos.pt")
@@ -66,7 +68,7 @@ def process_input_video(input_dir, output_dir, backup_dir, log_dir):
                         print(f"\nProcesando video: {video}")
                         path_video_file = os.path.join(input_dir, video)
 
-                        status = count_specific_classes_safe(
+                        status = count_specific_classes(
                             path_video_file, "output_specific_classes.avi", "vehiculos.pt",
                             [0, 1, 2, 3, 4], cropped_box, saved_json, saved_csv, video
                         )
@@ -116,7 +118,7 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
     line_points_max = [(line_x, 0), (line_x, height)]  # Línea vertical desde arriba hasta abajo
 
     counter = solutions.ObjectCounter(
-        show=True, region=line_points_max, model=model_path,
+        show=False, region=line_points_max, model=model_path,
         classes=classes_to_count, verbose=False, line_thickness=0, show_in=False, show_out=False, line_width=0
     )
 
