@@ -100,8 +100,30 @@ def count_specific_classes(video_path, output_video_path, model_path, classes_to
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     video_size = (width * height) * 0.80  # 80% del tamaño del video será el máximo bounding box válido
 
-    assert cap.isOpened(), "Error al abrir el archivo de video"
+    #scrip con las correcciones de frames
+    if not cap.isOpened():
+    print(f"Error: no se pudo abrir el archivo de video: {video_path}")
+    return False
 
+    frame_count_check = 0
+    valid_frame_found = False
+
+    while frame_count_check < 30:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        if frame is not None and frame.shape[0] > 0 and frame.shape[1] > 0:
+            valid_frame_found = True
+            break
+        frame_count_check += 1
+
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reiniciar al primer frame
+    
+    if not valid_frame_found:
+        print(f"Error: el video {video_path} no contiene frames válidos.")
+        cap.release()
+        return False
+    
     w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
     video_writer = cv2.VideoWriter(output_video_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
 

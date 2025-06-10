@@ -1,0 +1,11 @@
+{
+    "Input_files": "entrada/",
+    "Output_files": "./salidas",
+    "Backup_files": "./backup",
+    "Log_dir": "./log_dir",
+    "moto_dir": "./salidas/moto_dir",
+    "omnibus_dir": "./salidas/omnibus_dir",
+    "auto_dir": "./salidas/auto_dir",
+    "camionp_dir": "./salidas/camionesp_dir",
+    "camionl_dir": "./salidas/camionesl_dir"	
+}
