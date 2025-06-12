@@ -1,1 +1,5 @@
+docker run -it --rm \
+  --gpus all \
+  -v /home/jpdeleon/Documents/videos:/camineria/videos \
+  camineria-gpu/jpdeleon
 
